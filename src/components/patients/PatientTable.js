@@ -1,12 +1,53 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import MaterialReactTable from 'material-react-table';
 import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Chip from '@mui/material/Chip';
 import FaceIcon from '@mui/icons-material/Face';
 
 
 const PatientTable = () => {
   //must be memoized or stable
+  const [users, setUsers] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+
+
+  useEffect(() => {
+    console.log("sdsd");
+    let isMounted = true;
+    const controller = new AbortController();
+    const username = localStorage.getItem('userName');
+
+    const getUsers = async () => {
+      try {
+        const response = await axiosPrivate.get(`/patient/${username}/patients`, {
+          signal: controller.signal
+        });
+        // console.log(typeof(JSON.stringify(response.data)));
+        // console.log(JSON.parse(response.data));
+        isMounted && setUsers(response.data);
+        // setUsers(response.data);
+      } catch (err) {
+        console.error(err);
+        // navigate('/', { state: { from: location }, replace: true });
+      }
+    }
+
+    getUsers();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    }
+  }, []);
+
+
+
   const columns = useMemo(
     () => [
       {
@@ -18,11 +59,7 @@ const PatientTable = () => {
         header: 'Email',
       },
       {
-        accessorKey: 'address',
-        header: 'Address',
-      },
-      {
-        accessorKey: 'telno',
+        accessorKey: 'phoneNo',
         header: 'Telephone Number',
       },
       {
@@ -117,12 +154,25 @@ const PatientTable = () => {
         telno: '0776767878',
         patientId: '45'
       },
-
-    ],
+    ]
+    ,
     [],
   );
 
-  return <MaterialReactTable columns={columns} data={data} initialState={{ density: 'compact' }}/>;
+  // function processData(jsonData) {
+  //   const result = Object.keys(jsonData).map((key) => {
+  //     return jsonData[key];
+  //   });
+  //   return result;
+  // }
+
+
+  // //must be memoized or stable
+  // const data = useMemo(
+  //   () => processData(users), []
+  // );
+
+  return <MaterialReactTable columns={columns} data={users} initialState={{ density: 'compact' }} />;
 };
 
 export default PatientTable;

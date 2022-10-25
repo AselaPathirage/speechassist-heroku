@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Button from '@mui/material/Button';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -21,11 +22,54 @@ const AddEvent = (props) => {
   const [linkvalue, setlinkValue] = useState("");
   const [title, setTitle] = useState("");
   const [patient, setPatient] = useState("");
-  
+  const [patient2, setPatient2] = useState(0);
+
+  const [users, setUsers] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  let userss = [];
+
+  useEffect(() => {
+    console.log("sdsd");
+    let isMounted = true;
+    const controller = new AbortController();
+    const username = localStorage.getItem('userName');
+
+    const getUsers = async () => {
+      try {
+        const response = await axiosPrivate.get(`/patient/${username}/patients`, {
+          signal: controller.signal
+        });
+        // console.log(typeof(JSON.stringify(response.data)));
+
+        response.data.forEach(car => {
+
+          car['label'] = `${car['fullName']}-${car['patientId']}`;
+          // car['id'] = car['patientId'];
+
+        });
+        console.log(response.data);
+        // userss = response.data;
+        isMounted && setUsers(response.data);
+        // setUsers(response.data);
+      } catch (err) {
+        console.error(err);
+        // navigate('/', { state: { from: location }, replace: true });
+      }
+    }
+
+    getUsers();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    }
+  }, []);
+
 
   const handleChange = (newValue) => {
     setStart(newValue);
   };
+
   const handleChangeEnd = (newValue) => {
     setendValue(newValue);
   };
@@ -35,24 +79,38 @@ const AddEvent = (props) => {
 
   const addEvent = async (e) => {
     e.preventDefault();
-    props.events((prev) => [...prev, { start, end, title,patient,linkvalue }]);
-    props.close();
+    const [str,str2]=patient.split('-');
+    const [startstr,aa]=start.toTimeString().split(' ');
+    const [endstr,bb]=start.toTimeString().split(' ');
+    const [hoursFF, minutesFF, secondsFF] = startstr.split(':');
+    const [hours2FF, minutes2FF, seconds2FF] = endstr.split(':');
+    const [mm,dd,yy]=start.toLocaleDateString().split('/');
+    const startFF = new Date(+yy, mm - 1, +dd, +hoursFF, +minutesFF, +secondsFF);
+    const endFF = new Date(+yy, mm - 1, +dd, +hours2FF, +minutes2FF, +seconds2FF);
+    // const username = localStorage.getItem('userName');
+    // console.log(datestr);
+    // props.events((prev) => [...prev, { start, end, title, patientId:str2,patientName:str, meetingLink:linkvalue }]);
+    props.events((prev) => [...prev, { start:startFF, end:endFF,date:`${yy}-${mm}-${dd}`, title, patientId:patient2,patientName:str, meetingLink:linkvalue,therapistId:username }]);
+    
+    const username = localStorage.getItem('userName');
+    console.log(JSON.stringify({
+      startTime:startstr, endTime:endstr,date:`${yy}-${mm}-${dd}`, title, patientId:patient2, meetingLink:linkvalue ,therapistId:username
+    }));
+    try {
+      const response = await axiosPrivate.post(
+        `/calender`,
+        JSON.stringify({
+          startTime:startstr, endTime:endstr,date:`${yy}-${mm}-${dd}`, title, patientId:patient2, meetingLink:linkvalue ,therapistId:username
+        })
+      );
+      console.log("ss");
+      console.log(response?.data);
+      console.log(JSON.stringify(response));
 
-    // const response = await axios.post(
-    //   REGISTER_URL,
-    //   JSON.stringify({
-    //     username: user,
-    //     password: pwd,
-    //     fullName: fullName,
-    //     mediId: mediId,
-    //     phoneNo: telNo,
-    //     email: email,
-    //   }),
-    //   {
-    //     headers: { "Content-Type": "application/json" },
-    //     withCredentials: true,
-    //   }
-    // );
+    } catch (err) {
+      console.log(err);
+    }
+    props.close();
   };
 
   return (
@@ -83,10 +141,11 @@ const AddEvent = (props) => {
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
-                options={top100Films}
+                options={users}
                 // sx={{ width: 300 }}
-                onChange={event => setPatient(event.target.value)}
                 value={patient}
+                onChange={(event,newValue) => {setPatient2(newValue.patientId);setPatient(newValue.label);}}
+
                 renderInput={(params) => <TextField {...params} label="Patient" />}
               />
               <DesktopDatePicker

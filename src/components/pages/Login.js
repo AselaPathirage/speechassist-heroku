@@ -36,10 +36,36 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (user === 'therapist' && pwd === 'therapist') {
-      navigate("/therapist", { replace: true });
-    } else {
-      setErrMsg('Login Failed');
+
+    try {
+      const response = await axios.post(LOGIN_URL,
+        JSON.stringify({ username: user, password: pwd }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
+      console.log(JSON.stringify(response?.data));
+      const accessToken = response?.data?.jwtToken;
+      //todo: if API returns roles as an array, change this
+      const roles = new Array(response?.data?.role);
+      localStorage.setItem('userName', response.data.patientId);
+      localStorage.setItem('accessToken', accessToken);
+      setAuth({ user, pwd, roles, accessToken });
+      setUser('');
+      setPwd('');
+      navigate(from, { replace: true });
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg('No Server Response');
+      } else if (err.response?.status === 400) {
+        setErrMsg('Missing Username or Password');
+      } else if (err.response?.status === 401) {
+        setErrMsg('Unauthorized');
+      } else {
+        setErrMsg('Login Failed');
+      }
+      errRef.current.focus();
     }
   };
 

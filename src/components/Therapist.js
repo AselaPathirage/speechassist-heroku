@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Routes, Route } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 import Home from "./home/Home";
@@ -10,6 +10,7 @@ import Calender from "./calender/Calender";
 import Schedules from './schedules/Schedules';
 import Chat from './chat/Chat';
 import QRpop from "./qr/QRpop";
+import useLogout from "../hooks/useLogout";
 
 import { styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -123,6 +124,14 @@ export default function Therapist() {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+    const navigate = useNavigate();
+    const logout = useLogout();
+
+    const signOut = async () => {
+        await logout();
+        navigate('/');
+    }
+
     const changeSideBarActive = (text) => {
         setSelectedItem(text);
     };
@@ -170,7 +179,8 @@ export default function Therapist() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            
+            <MenuItem onClick={signOut}>Logout</MenuItem>
         </Menu>
     );
 
@@ -192,7 +202,7 @@ export default function Therapist() {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem>
+            {/* <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                     <Badge badgeContent={4} color="error">
                         <MailIcon />
@@ -211,7 +221,7 @@ export default function Therapist() {
                     </Badge>
                 </IconButton>
                 <p className="m-0">Notifications</p>
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem onClick={handleQROpen}>
                 <IconButton
                     size="large"
@@ -275,7 +285,7 @@ export default function Therapist() {
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                        {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">
                                 <MailIcon />
                             </Badge>
@@ -288,7 +298,7 @@ export default function Therapist() {
                             <Badge badgeContent={17} color="error">
                                 <NotificationsIcon />
                             </Badge>
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton
                             size="large"
                             aria-label="show 17 new notifications"

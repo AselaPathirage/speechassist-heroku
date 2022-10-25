@@ -21,9 +21,9 @@ const ViewEvent = (props) => {
   // const [value, setValue] = useState(new Date('2022-08-18T21:11:54'));
   const [start, setStart] = useState(new Date(props.slot.start));
   const [end, setendValue] = useState(new Date(props.slot.end));
-  const [linkvalue, setlinkValue] = useState("https://us05web.zoom.us/j/246791z09#success");
+  const [linkvalue, setlinkValue] = useState(props.slot.meetingLink);
   const [title, setTitle] = useState(props.slot.title);
-  const [patient, setPatient] = useState(props.slot.patient);
+  const [patient, setPatient] = useState(props.slot.patientName);
 
 
   const handleChange = (newValue) => {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useAxiosPrivate from "../../../../hooks/useAxiosPrivate";
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -46,7 +47,43 @@ function a11yProps(index) {
 const Schedules = (props) => {
   const [value, setValue] = useState(0);
   const [openschedule, setopenschedule] = useState(false);
-  const [myschedules, setmyschedules] = useState(schedules);
+  const [myschedules, setmyschedules] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    console.log("sdsd");
+    let isMounted = true;
+    const controller = new AbortController();
+    const therapistId = localStorage.getItem('userName');
+
+    const getSchedules = async () => {
+      try {
+        const response = await axiosPrivate.get(`/schedule/patient/${props.patientId}`, {
+          signal: controller.signal
+        });
+        
+        console.log(response.data);
+        isMounted && setmyschedules(response.data);
+        // setUsers(response.data);
+      } catch (err) {
+        console.error(err);
+        // navigate('/', { state: { from: location }, replace: true });
+      }
+    }
+
+    getSchedules();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    }
+  }, []);
+
+
+
+
+
+
 
   const handleClose = () => {
     setopenschedule(false);
@@ -70,7 +107,7 @@ const Schedules = (props) => {
         </Typography>
         <Button size="small" variant="contained" onClick={handleOpen}>+ Create Schedule</Button>
       </Stack>
-      {openschedule && <AddSchedule openStatus={openschedule} close={handleClose} />}
+      {openschedule && <AddSchedule openStatus={openschedule} close={handleClose} events={setmyschedules}/>}
       <Box
         sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 530, border: 0.25, borderColor: '#e0e3e6', borderRadius: 3 }}
       >
@@ -91,7 +128,7 @@ const Schedules = (props) => {
 
             {myschedules.map((s, index) => (
               <TabPanel value={value} index={index} key={index}>
-                <ScheduleView weeks={s.weeks} completed={s.completed}/>
+                <ScheduleView weeks={s.scheduleWeek} completed={s.completed} scheduleId={s.s}/>
               </TabPanel>
             ))}
           </>

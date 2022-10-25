@@ -15,6 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
+
 import AddWeek from './AddWeek';
 
 function TabPanel(props) {
@@ -95,7 +96,7 @@ const ScheduleView = (props) => {
                     </>
                 )}
             </Stack>
-            {openweek && <AddWeek openStatus={openweek} close={handleClose} weeks={props.weeks} setweeks={addsetweeks} />}
+            {openweek && <AddWeek openStatus={openweek} close={handleClose} weeks={props.weeks} setweeks={addsetweeks} scheduleId={props.scheduleId}/>}
 
             <Box
                 sx={{
@@ -137,7 +138,7 @@ const ScheduleView = (props) => {
                                         <DesktopDatePicker
                                             label="Start Date"
                                             inputFormat="DD/MM/yyyy"
-                                            value={s.date}
+                                            value={s.startDate}
                                             renderInput={(params) => <TextField {...params} />}
                                             readOnly
                                         />
@@ -147,7 +148,7 @@ const ScheduleView = (props) => {
                                             <Chip label="Tasks" sx={{ bgcolor: '#d5e5f7' }} />
                                         </Divider>
 
-                                        {s.tasks.map((form, index) => {
+                                        {s.scheduleWeekTask.map((form, index) => {
                                             return (
                                                 <div key={index}>
                                                     <TextField
@@ -184,9 +185,9 @@ const ScheduleView = (props) => {
                                                             readOnly
                                                         />
                                                     </Stack>
-                                                    {form.audio && form.audio ? (
+                                                    {form.isAudioUploaded && form.isAudioUploaded ? (
                                                         <AudioPlayer
-                                                            src="https://hanzluo.s3-us-west-1.amazonaws.com/music/wuyuwuqing.mp3"
+                                                            src={form.audioURL}
                                                             volume={0.5}
                                                             onPlay={e => console.log("onPlay")}
                                                             layout={'horizontal'}

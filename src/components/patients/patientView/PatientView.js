@@ -27,11 +27,14 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const PatientView = (props) => {
+    
     useEffect(() => {
         props.itemSelected('Patients');
+        
     })
 
     const { patientId } = useParams();
+// console.log(patientId);
 
     const [state, setState] = React.useState(false);
 
@@ -51,20 +54,18 @@ const PatientView = (props) => {
 
             <Grid container spacing={2} marginTop={2}>
                 <Grid item xs={12} md={5} >
-                    <Item sx={{ height: 200 }}><Details /></Item>
+                    <Item sx={{ height: 200 }}><Details patientId={patientId}/></Item>
                 </Grid>
                 <Grid item xs={12} md={3} alignItems="center" justifyContent="center">
-                    <Item sx={{ height: 200,alignItems: 'center'}} ><Stats /></Item>
+                    <Item sx={{ height: 200,alignItems: 'center',overflow: "auto"}} ><Stats patientId={patientId}/></Item>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <Item sx={{ height: 200 }}><Appointments /></Item>
+                    <Item sx={{ height: 200 }}><Appointments patientId={patientId}/></Item>
                 </Grid>
-                <Grid item xs={12} md={9}>
-                    <Item><Schedules /></Item>
+                <Grid item xs={12} md={12}>
+                    <Item><Schedules patientId={patientId}/></Item>
                 </Grid>
-                <Grid item xs={12} md={3}>
-                    <Item><Reports /></Item>
-                </Grid>
+                
             </Grid>
 
             <SwipeableDrawer

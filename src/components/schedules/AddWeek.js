@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Button from '@mui/material/Button';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,19 +16,21 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import moment from 'moment';
 
 const AddWeek = (props) => {
     // const [value, setValue] = useState(new Date('2022-08-18T21:11:54'));
     const [value, setValue] = useState(new Date());
     const [value2, setValue2] = useState('');
     const [weeks, setweeks] = useState(props.weeks);
+    const axiosPrivate = useAxiosPrivate();
 
     const handleChange = (newValue) => {
         setValue(newValue);
     };
 
     const [formFields, setFormFields] = useState([
-        { title: '', treatmentMethod: '',treatmentvalue:'' },
+        { title: '', treatmentMethod: '',treatmentValue:'',treatmentvalue:'' },
     ])
 
     const handleFormChange = (event, index) => {
@@ -46,18 +49,52 @@ const AddWeek = (props) => {
     const handleFormChange3 = (event, index) => {
         // console.log(event.target);
         let data = [...formFields];
+        data[index].treatmentValue = event.target.value;
         data[index].treatmentvalue = event.target.value;
         setFormFields(data);
     }
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
+        const startAA=moment(value).format('MM/DD/YYYY');
+        // console.log(startAA);
+        const [mm,dd,yy]=startAA.split('/');
         let object={
             title:value2,
-            date:value,
-            tasks:formFields,
+            startDate:`${yy}-${mm}-${dd}`,
+            scheduleWeekTask:formFields,
         };
+        console.log(object);
         props.setweeks(object);
-        // console.log(formFields)
+
+
+        const username = localStorage.getItem('userName');
+        console.log(JSON.stringify({
+            scheduleId:props.scheduleId,
+            title:value2,
+            startDate:`${yy}-${mm}-${dd}`,
+            scheduleWeekTask:formFields,
+        }));
+        try {
+          const response = await axiosPrivate.post(
+            `/schedule/week`,
+            JSON.stringify({
+                scheduleId:props.scheduleId,
+                title:value2,
+                startDate:`${yy}-${mm}-${dd}`,
+                scheduleWeekTask:formFields,
+            })
+          );
+          console.log("ss");
+          console.log(response?.data);
+          console.log(JSON.stringify(response));
+    
+        } catch (err) {
+          console.log(err);
+        }
+
+
+        console.log(formFields)
+
         props.close();
     }
 
@@ -65,7 +102,8 @@ const AddWeek = (props) => {
         let object = {
             title: '', 
             treatmentMethod: '',
-            treatmentvalue:''
+            treatmentvalue:'',
+            treatmentValue:''
         }
         setFormFields([...formFields, object])
     }
