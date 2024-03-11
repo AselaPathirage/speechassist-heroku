@@ -15,7 +15,7 @@ function Details(props) {
       const controller = new AbortController();
 
       try {
-         const response2 = await axiosPrivate.get(`/patient/${props.patientId}`, {
+         const response2 = await axiosPrivate.get(`/patient/${patientId}`, {
             signal: controller.signal
          });
          // console.log(typeof(JSON.stringify(response2.data.fullName)));

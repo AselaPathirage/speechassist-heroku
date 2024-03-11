@@ -128,7 +128,7 @@ const Schedules = (props) => {
 
             {myschedules.map((s, index) => (
               <TabPanel value={value} index={index} key={index}>
-                <ScheduleView weeks={s.scheduleWeek} completed={s.completed} scheduleId={s.s}/>
+                <ScheduleView scheduleId={s.scheduleId} weeks={s.scheduleWeek} completed={s.completed} />
               </TabPanel>
             ))}
           </>

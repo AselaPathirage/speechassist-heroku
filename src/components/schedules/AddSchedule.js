@@ -88,8 +88,7 @@ const AddSchedule = (props) => {
     therapistId: username,
     }));
     try {
-      const response = await axiosPrivate.post(
-        `/calender`,
+      const response = await axiosPrivate.post(`/schedule`,
         JSON.stringify({
           title: title,
           patientId: patient2,

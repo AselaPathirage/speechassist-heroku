@@ -53,10 +53,12 @@ function a11yProps(index) {
 }
 
 const ScheduleView = (props) => {
+    console.log(props);
     const [value, setValue] = useState(0);
     const [openweek, setopenweek] = useState(false);
     const [weeks, setweeks] = useState(props.weeks);
     const [completed, setcompleted] = useState(props.completed);
+    const [scheduleId, setscheduleId] = useState(props.scheduleId);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -96,7 +98,7 @@ const ScheduleView = (props) => {
                     </>
                 )}
             </Stack>
-            {openweek && <AddWeek openStatus={openweek} close={handleClose} weeks={props.weeks} setweeks={addsetweeks} scheduleId={props.scheduleId}/>}
+            {openweek && <AddWeek openStatus={openweek} close={handleClose} weeks={props.weeks} setweeks={addsetweeks} scheduleId={scheduleId}/>}
 
             <Box
                 sx={{

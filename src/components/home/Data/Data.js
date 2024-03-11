@@ -36,9 +36,9 @@ export const CardsData = [
             backGround: "#4f7da2",
             boxShadow: "0px 10px 20px 0px #e0c6f5",
         },
-        barValue: 70,
-        barValue2: 30,
-        value: "50",
+        barValue: 100,
+        barValue2: 0,
+        value: "3",
         series: [
             {
                 name: "Appointment",
@@ -54,9 +54,9 @@ export const CardsData = [
             backGround: "#5d6dc2",
             boxShadow: "0px 10px 20px 0px #e0c6f5",
         },
-        barValue: 60,
-        barValue2: 40,
-        value: "10",
+        barValue: 100,
+        barValue2: 0,
+        value: "5",
         series: [
             {
                 name: "Appointment",
@@ -73,13 +73,13 @@ export const UpdatesData = [
         name: "Asela Pathirage Devops",
         notice: "Has an appointment",
         time: "Within 25 minutes",
-        Remark: " Nothing "
+        Remark: " No "
     },
     {
         name: "Yasith Samaradiwakara",
         notice: "Cancel appointment",
         time: "10 minutes",
-        Remark: " Nsfsfisnfks "
+        Remark: " No "
     },
     {
         name: "Yethum Sanjaya batman",

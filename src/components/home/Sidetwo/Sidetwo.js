@@ -1,6 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 
 const Sidetwo = () => {
+
+    const [users, setUsers] = useState([]);
+    const axiosPrivate = useAxiosPrivate();
+
+
+    useEffect(() => {
+        console.log("sdsd");
+        let isMounted = true;
+        const controller = new AbortController();
+        const username = localStorage.getItem('userName');
+    
+        const getUsers = async () => {
+          try {
+            const response = await axiosPrivate.get(`/patient/${username}/patients`, {
+              signal: controller.signal
+            });
+            // console.log(typeof(JSON.stringify(response.data)));
+            // console.log(JSON.parse(response.data));
+            console.log(response);
+             isMounted && setUsers(response.data);
+            setUsers(response.data);
+            console.log(users);
+          } catch (err) {
+            console.error(err);
+            // navigate('/', { state: { from: location }, replace: true });
+          }
+        }
+    
+        getUsers();
+    
+        return () => {
+          isMounted = false;
+          controller.abort();
+        }
+      }, []);
+    
 
   return (
     <div className="Table">
@@ -9,7 +47,6 @@ const Sidetwo = () => {
         <table class="table table-striped" style={{border:"0.5px solid #bacaf7",borderRadius:'6px 6px 6px 6px'}}>
             <thead style={{borderRadius:'10px'}}>
                 <tr style={{borderTopLeftRadius: "5px"}}>
-                <th scope="col">#</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
                 <th scope="col">Date</th>
@@ -17,41 +54,16 @@ const Sidetwo = () => {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Silva</td>
-                <td>16-08-2022</td>
+            {users.map((student, index) => (
+              <tr data-index={index}>
+                <td>{student.fullName}</td>
+                <td>{student.email}</td>
+                <td>{student.phoneNo}</td>
                 <td>Active</td>
-                </tr>
-                <tr>
-                <th scope="row">2</th>
-                <td>Harith</td>
-                <td>Iduwara</td>
-                <td>18-08-2022</td>
-                <td>Active</td>
-                </tr>
-                <tr>
-                <th scope="row">3</th>
-                <td>Nisan </td>
-                <td>Abeyvikrama</td>
-                <td>18-08-2022</td>
-                <td>Active</td>
-                </tr>
-                <tr>
-                <th scope="row">4</th>
-                <td>Nimesh</td>
-                <td>Nishamal</td>
-                <td>19-08-2022</td>
-                <td>Active</td>
-                </tr>
-                <tr>
-                <th scope="row">5</th>
-                <td>Yasith</td>
-                <td>Perera</td>
-                <td>20-08-2022</td>
-                <td>Active</td>
-                </tr>
+
+              </tr>
+            ))}
+
                 
             </tbody>
         </table>

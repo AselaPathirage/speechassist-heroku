@@ -55,7 +55,7 @@ function CompactCard ({param, setExpanded}){
       <div className='details'>
         {/* <Png /> */}
         <span>{param.value}</span>
-        <span>Last 30 days</span>
+        <span>Last 20 Days</span>
       </div>
     </motion.div>
   )
@@ -78,7 +78,7 @@ function ExpandedCard({param, setExpanded}){
         left: 0,
         blur: 3,
         color: "#000",
-        opacity: 0.35,
+        opacity: 0.30,
       },
 
       fill: {
@@ -139,7 +139,7 @@ function ExpandedCard({param, setExpanded}){
       <div className='chartContainer'>
         <Chart series={param.series} type='area' options={data.options}/>
       </div>
-      <span>Last 30 days</span>
+      <span>Last 20 days</span>
     </motion.div>
   );
 }

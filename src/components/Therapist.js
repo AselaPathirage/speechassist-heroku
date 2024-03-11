@@ -260,7 +260,7 @@ export default function Therapist() {
         { text: 'Calender', link: '/therapist/calender', icon: <CalendarMonthIcon /> },
         { text: 'Schedules', link: '/therapist/schedules', icon: <EventNoteIcon /> },
         { text: 'Patients', link: '/therapist/patients', icon: <PeopleAltIcon /> },
-        { text: 'Messages', link: '/therapist/messages', icon: <ChatBubbleIcon /> },
+        // { text: 'Messages', link: '/therapist/messages', icon: <ChatBubbleIcon /> },
     ];
 
     return (
@@ -387,7 +387,7 @@ export default function Therapist() {
                     <Route path="/patients/:patientId" element={<PatientView itemSelected={changeSideBarActive} />} />
                     <Route path="/calender" element={<Calender itemSelected={changeSideBarActive} />} />
                     <Route path="/schedules/*" element={<Schedules itemSelected={changeSideBarActive} />} />
-                    <Route path="/messages" element={<Chat itemSelected={changeSideBarActive} />} />
+                    {/* <Route path="/messages" element={<Chat itemSelected={changeSideBarActive} />} /> */}
                 </Routes>
             </Box>
         </Box>

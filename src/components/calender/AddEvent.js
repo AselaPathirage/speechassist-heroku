@@ -79,12 +79,15 @@ const AddEvent = (props) => {
 
   const addEvent = async (e) => {
     e.preventDefault();
+    console.log(start.toDate());
     const [str,str2]=patient.split('-');
-    const [startstr,aa]=start.toTimeString().split(' ');
-    const [endstr,bb]=start.toTimeString().split(' ');
+    const startstr=start.toDate().toString().split(' ')[4];
+    const endstr=end.toDate().toString().split(' ')[4];
+    console.log(startstr);
     const [hoursFF, minutesFF, secondsFF] = startstr.split(':');
     const [hours2FF, minutes2FF, seconds2FF] = endstr.split(':');
-    const [mm,dd,yy]=start.toLocaleDateString().split('/');
+    console.log(start.format('MM-DD-YYYY').toString());
+    const [mm,dd,yy]=start.format('MM-DD-YYYY').toString().split('-');
     const startFF = new Date(+yy, mm - 1, +dd, +hoursFF, +minutesFF, +secondsFF);
     const endFF = new Date(+yy, mm - 1, +dd, +hours2FF, +minutes2FF, +seconds2FF);
     // const username = localStorage.getItem('userName');

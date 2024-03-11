@@ -23,6 +23,8 @@ const AddWeek = (props) => {
     const [value, setValue] = useState(new Date());
     const [value2, setValue2] = useState('');
     const [weeks, setweeks] = useState(props.weeks);
+    const [scheduleIDD, setscheduleID] = useState(props.scheduleId);
+    
     const axiosPrivate = useAxiosPrivate();
 
     const handleChange = (newValue) => {
@@ -69,7 +71,7 @@ const AddWeek = (props) => {
 
         const username = localStorage.getItem('userName');
         console.log(JSON.stringify({
-            scheduleId:props.scheduleId,
+            scheduleId:scheduleIDD,
             title:value2,
             startDate:`${yy}-${mm}-${dd}`,
             scheduleWeekTask:formFields,
@@ -78,10 +80,10 @@ const AddWeek = (props) => {
           const response = await axiosPrivate.post(
             `/schedule/week`,
             JSON.stringify({
-                scheduleId:props.scheduleId,
+                scheduleId:scheduleIDD,
                 title:value2,
                 startDate:`${yy}-${mm}-${dd}`,
-                scheduleWeekTask:formFields,
+                weekTaskRequests:formFields,
             })
           );
           console.log("ss");
